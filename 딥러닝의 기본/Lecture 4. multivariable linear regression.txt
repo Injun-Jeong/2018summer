@@ -1,0 +1,13 @@
+﻿변수(feature)의 개수가 많아질 수록 hypothesis function의 수식이 길어짐
+ex) feature: x1, x2, x3
+     then, H(x1, x2, x3) = w1*x1 + w2*x2 + w3*x3 + b
+
+
+
+이를 matrix를 활용할 것임
+ex) X = [x1 x2 x3] & W = [w1; w2; w3]
+     then, XW = x1*w1 + x2*w2 + x3*w3
+
+
+
+instance의 수와 관계 없이, W-matrix의 size는 feature의 수와 같음

@@ -1,0 +1,50 @@
+﻿그래프를 표현하고 싶을 때 %matplotlib inline 코드가 있어야 함
+[code]
+%matplotlib inline
+import matplotlib.pyplot as plt
+plt.plot(X, Y)		// X: 가로축 범위, Y: 세로축 범위
+plt.show()
+
+
+
+X = []
+- 비어있는 배열로 X라는 노드 생성
+- X라는 배열에 7이라는 값을 추가하고 싶을 땐
+[code]
+X.append(7)
+
+
+
+minimize cost
+- gradient descent는 W:= W - learning_rate * derivative으로 새롭게 정의되는 W에 대한 cost가 최소가 될 때의 W와 b를 찾는 것
+[the example of code]
+learning_rate = 0.1
+gradient = tf.reduce_mean((W * X - Y) * X)	// derivative
+descent = W - learning_rate * gradient
+update = W.assign(descent)			// 새로운 W 정의. tensorflow에선 'W = descent' 로 할 수 없음
+
+
+
+위와 같은 귀찮음을 해소하기 위하여 아래의 코드 사용하면 tensorflow가 미분 등 최적의 cost를 찾아내기 위한 일련의 과정을 알아서 해줌
+[code]
+optimizer = tf.train.GradientDescentOptimizer(learning_rate = 0.1)
+train = optimizer.minimize(cost)
+
+
+
+위의 코드를 사용하여 gradient를 임의로 수정하고 싶을 때
+[code]
+optimizer = tf.train.GradientDescentOptimizer(learning_rate = 0.1)
+gvs = optimizer.compute_gradients(cost, [W])
+apply_gradients = optimizer.apply_gradients(gvs)
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,77 @@
+﻿data가 많아지니 코드에 일일이 적기가 힘듦
+- so, 파일을 load하는 방법을 적용
+
+
+
+csv(comma-sparated values)
+- means that 몇가지 필드를 ','로 구분하는 텍스트 데이터 (파일)
+
+
+
+loading data from  file
+- numpy lib에 있는 loadtxt을 활용
+
+[code]
+import os
+
+# load할 데이터의 파일 경로 설정, python에선 \이 아닌 \\으로 해야 함
+os.chdir("C:\\Users\\정인준\\input")
+
+import numpy as np
+
+# 'txt' 확장자명을 명시해야함, 데이터 타입을 정할 때 단점이 있다면, csv의 data가 전부 같은 data type이어야 함
+xy = np.loadtxt('data.csv.txt', delimiter = ',', dtype = np.float32)
+
+
+
+slicing
+[code]
+import numpy as np
+a = np.array([1, 2, 3, 4, 5])
+
+# it is slicing.
+a[1:4]
+# [1:4] means '1번 원소부터 3번째 까지'
+
+[output]
+array([2, 3, 4])
+
+
+
+file이 굉장히 커서 memory에 한번에 올리기 힘든 경우, 그러한 경우에 numpy를 사용하면 memory가 부족하다고 나올 것임
+- 이런 경우를 대비해서, queue runner을 만들어 놓음
+  - queue runner: 하나의 file이 아닌 여러 개의 file일 수 있음
+
+
+
+(m.t.)
+queue runner의 원리
+- 여러 개의 파일을 불러옴
+- 순서대로 (혹은 랜덤하게) queue에 정렬
+- 펌프질하듯 queue에서 일정 개수만큼씩 가져오면서 학습 시킴
+
+[code]
+# 1. list형식으로 여러 개의 csv.txt 파일 불러오기 by using queue_runner -> 여러 파일을 queue에 정렬
+filename_queue = tf.train.string_input_producer(['data1.csv.txt', 'data2.csv.txt', 'data3.csv.txt'], shuffle = False, name = 'filename_queue')
+
+# 2
+reader = tf.TextLineReader()
+key, value = reader.read(filename_queue)
+
+# 3
+record_defaults = [[0.], [0.], [0.], [0.]]
+xy = tf.decode_csv(value, record_defaults=record_defaults)
+
+# 4. collect batches of csv in queue, 펌프질
+train_x_batch, train_y_batch = tf.train.batch([xy[0:-1], xy[-1:]], batch_size=10)
+
+...
+#아래의 code들도 당분간은 형식적으로 해주어야 한다 정도로 알아 놓자
+# Start populating the filename queue.
+coord = tf.train.Coordinator()
+threads = tf.train.start_queue_runners(sess=sess, coord=coord)
+
+...
+
+coord.request_stop()
+coord.join(threads)

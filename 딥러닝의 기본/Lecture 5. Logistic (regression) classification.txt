@@ -1,0 +1,33 @@
+﻿Logistic (regression) classification
+- classification 알고리즘 중 정확도가 굉장히 good
+- also, neural nework와  deep learning에 굉장히 중요한 concept임
+
+
+
+Binary classification
+- 2종류의 class 중 분류하는 것
+
+
+
+Logistic hypothesis
+- 그 동안의 linear regression은 hypothesis can gibe values large than 1 or less than 0
+- logistic hypothesis를 사용하여 결과 값을 0과 1사이의 값으로 출력
+- Let Z = W*X + b. Then, Logistic hypothesis = 1/{1+e^-(Z)} (called 'sigmoid' or 'logistic function')
+
+
+
+Cost function
+- C(H(X), y) = -y*log(H(X)) - (1-y)*log(1-H(X))
+  cf. 지수(e)를 상쇄시키기 위하여 log 도임
+[code]
+cost = tf.reduce_mean(-tf.reduce_sum(Y*tf.log(hypothesis) + (1-Y)*tf.log(1-hypothesis)))
+
+
+Minimize cost: Gradient decent algorithm
+- 동일
+[code]
+train = tf.train.GradientDescentOptimizer(learning_rate = 0.1).minimize(cost)
+
+
+
+

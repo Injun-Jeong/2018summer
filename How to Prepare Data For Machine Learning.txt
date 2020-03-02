@@ -1,0 +1,11 @@
+﻿https://machinelearningmastery.com/how-to-prepare-data-for-machine-learning/
+
+Summary
+
+In this post you learned the essence of data preparation for machine learning. You discovered a three step framework for data preparation and tactics in each step:
+
+    Step 1: Data Selection Consider what data is available, what data is missing and what data can be removed.
+    Step 2: Data Preprocessing Organize your selected data by formatting, cleaning and sampling from it.
+    Step 3: Data Transformation Transform preprocessed data ready for machine learning by engineering features using scaling, attribute decomposition and attribute aggregation.
+
+Data preparation is a large subject that can involve a lot of iterations, exploration and analysis. Getting good at data preparation will make you a master at machine learning. For now, just consider the questions raised in this post when preparing data and always be looking for clearer ways of representing the problem you are trying to solve.

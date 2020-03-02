@@ -1,0 +1,46 @@
+﻿logistic hypothesis
+[code]
+X = tf.placeholder(tf.float32, shape[None, 2])
+Y = tf.placeholder(tf.float32, shape[None, 1])
+W = tf.Variable(tf.random_normal([2, 1]), name = 'weight')
+b = tf.Variable(tf.random_normal([1]), name = 'bias')
+hypothesis = tf.sigmoid(tf.matmul(X, W) + b))
+
+
+
+Cost function & Minimize
+[code]
+cost = -tf.reduce_mean(Y*tf.log(hypothesis) + (1 - y)*tf.log(1 - hypothesis))
+train = tf.train.GradientDescentOptimizer(learning_rate = 0.1).minimize(cost)
+
+
+
+Predicted
+- tf.cast: 원하는 dtype으로 return함.
+  아래의 예시는 반환 값의 dtype을 tf.float32로 하였으니 주어진 명제에 대하여 참이면 1, 거짓이면 0으로 return
+[code]
+predicted = tf.cast(hypothesis > 0.5, dtype=tf.float32)
+
+
+
+Accuracy
+- 정확도를 아래와 같이 표현할 수 있음
+[code]
+accuracy = tf.reduce_mean(tf.cast(tf.equal(predicted, Y), dtype=tf.float32))
+
+
+
+
+numpy를 통해 data를 load해오는 과정에서 dtype=np.float32를 dtype=tf.float32로 하는 실수 주의
+[code]
+import tensorflow as tf
+import numpy as np
+xy=np.loadtxt('data-03-diabetes.csv', delimiter=',', dtype=np.float32)
+
+
+
+
+
+
+
+

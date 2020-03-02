@@ -1,0 +1,114 @@
+//Pandas는 데이터 분석 및 모델링에 중요한 라이브러리이며 텐서플로우 코딩에 널리 사용
+- 열 중심 데이터 분석 API
+- 입력 데이터를 처리하고 분석하는 데 효과적인 도구
+- 여러 ML 프레임워크에서도 Pandas 데이터 구조를 입력으로 지원
+- Pandas API를 전체적으로 소개하려면 길어지겠지만 중요한 개념은 꽤 간단
+
+//Pandas API를 가져와서 API 버전을 출력
+	import pandas as pd
+	pd.__version__
+
+//Pandas의 기본 데이터 구조는 두 가지 클래스로 구현
+- DataFrame은 행 및 이름 지정된 열이 포함된 관계형 데이터 테이블이라고 생각할 수 있음
+- Series는 하나의 열
+- DataFrame에는 하나 이상의 Series와 각 Series의 이름이 포함
+
+//Series를 만드는 한가지 방법은 Series 객체를 만드는 것
+	//Series 객체
+	pd.Series(['San Francisco', 'San Jose', 'Sacramento'])
+
+	0    San Francisco
+	1         San Jose
+	2       Sacramento
+	dtype: object
+
+//DataFrame 객체는 string 열 이름과 매핑되는 'dict'를 각각의 Series에 전달하여 만들 수 있음
+- Series의 길이가 일치하지 않는 경우, 누락된 값은 특수 NA/NaN 값으로 채워짐
+
+	city_names = pd.Series(['San Francisco', 'San Jose', 'Sacramento'])
+	population = pd.Series([852469, 1015785, 485199])
+	//DataFrame 객체
+	pd.DataFrame({ 'City name': city_names, 'Population': population })
+
+	 	City name 	Population
+	0 	San Francisco 	852469
+	1 	San Jose 		1015785
+	2 	Sacramento 	485199
+
+//대부분의 경우 전체 파일을 DataFrame으로 로드
+	california_housing_dataframe = pd.read_csv("https://storage.googleapis.com/mledu-datasets/california_housing_train.csv", sep=",")
+	california_housing_dataframe.describe()
+- DataFrame.describe를 사용하여 DataFrame에 관한 흥미로운 통계를 보여줌
+
+//또 다른 유용한 함수는 DataFrame.head로, DataFrame 레코드 중 처음 몇 개만 표시
+
+//Pandas의 또 다른 강력한 기능은 그래핑
+- 예를 들어 DataFrame.hist를 사용하면 한 열에서 값의 분포를 빠르게 검토할 수 있음
+	california_housing_dataframe.hist('housing_median_age')
+
+//데이터 조작
+- Python의 기본 산술 연산을 Series에 적용할 수도 있음
+	population / 1000.
+- NumPy는 유명한 계산과학 툴킷
+  - Pandas Series는 대부분의 NumPy 함수에 인수로 사용할 수 있음
+	import numpy as np
+	np.log(population)
+
+//더 복잡한 단일 열 변환에는 Series.apply를 사용
+-  Python map 함수처럼, Series.apply는 인수로 lambda 함수를 허용
+- 이는 각 값에 적용
+- 인구가 백만 명을 초과하는지 나타내는 새 Series
+	cities['is more population than 1,000,000'] = population.apply(lambda val: val > 1000000)
+
+
+//실습 #1
+
+다음 두 명제 모두 True인 경우에만 True인 새 Boolean 열을 추가하여 도시 테이블을 수정합니다.
+
+    도시 이름은 성인의 이름을 본따서 지었다.	// name.startswith("San")
+    도시 면적이 130제곱킬로미터보다 넓다.	//
+
+참고: 부울 Series는 기존 부울 연산자가 아닌 비트 연산자를 사용하여 결합할 수 있습니다. 예를 들어 logical and를 실행할 때 and 대신 &를 사용합니다.
+
+참고: 스페인어에서 "San"은 "성인"의 의미입니다.
+
+Sol)	cities['Area square miles'] = pd.Series([46.87, 176.53, 97.92])
+	cities['is wide and has saint name'] = (cities['Area square miles'] > 130) & cities['City name'].apply(lambda name: name.startswith('San'))
+	cities
+
+
+//DataFrame.reindex를 호출하여 수동으로 행의 순서를 재정렬
+
+//색인 재생성은 DataFrame을 섞기(임의 설정하기) 위한 좋은 방법
+- 아래의 예에서는 배열처럼 된 색인을 NumPy의 random.permutation 함수에 전달하여 값을 섞음
+	cities.reindex(np.random.permutation(cities.index))		// cities.index >> RangeIndex(start=0, stop=3, step=1)
+- 이렇게 섞인 배열로 reindex를 호출하면 DataFrame 행도 같은 방식으로 섞음
+
+
+//실습 #2
+
+reindex 메서드는 원래 DataFrame의 색인 값에 없는 색인 값을 허용합니다.
+메서드를 실행해보고 이런 값을 사용하면 어떤 결과가 나오는지 확인해보세요.
+왜 이런 값이 허용된다고 생각하나요?
+
+	cities.reindex([0, 4, 5, 2, 1])
+
+	City name 	Population 	is more population than 1,000,000 	Area square miles 	Population density 	Is wide and has saint name
+0 	San Francisco 	852469.0 		False 				46.87 		18187.945381 	False
+4 	NaN	 	NaN 		NaN 				NaN 		NaN 		NaN
+5 	NaN 		NaN 		NaN 				NaN 		NaN 		NaN
+2 	Sacramento 	485199.0 		False 				97.92 		4955.055147 	False
+1 	San Jose 		1015785.0 	True 				176.53 		5754.177760 	True
+
+- reindex 입력 배열에 원래 DataFrame 색인 값에 없는 값을 포함하면 reindex가 이 \'누락된\' 색인에 새 행을 추가하고 모든 해당 열을 NaN 값으로 채움
+
+
+
+
+
+
+
+
+
+
+

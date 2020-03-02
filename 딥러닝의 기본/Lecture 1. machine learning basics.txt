@@ -1,0 +1,24 @@
+﻿Machine Learning
+- 일종의 software
+- explicit programming의 다양한 rule들로 인한 복잡성의 한계를 극복하기 위하여 머신러닝 고안; Field of study that gives computers the ability to learn without being explicitly programmed
+(m.t.) 말 그대로 기계를 통해 학습시키는 것 여기서 기계는 컴퓨터이며, 학습이란 관측된 자료(예시) 등을 통하여 흐름(가설)을 예측하는 것
+
+
+
+학습하는 방법에 따라서 supervised/unsupervised learning로 구분
+- supervised: learning with labeled examples(training set)
+- unsupervised: learning with un-labeled data
+  ex. google news grouping, word clustering
+
+
+
+supervised learning
+- most common problem type in ML
+  ex. lmage labeling, email spam filter, predicting exam score
+
+
+
+supervised learning할 때 주로 사용되는 3가지 방법
+1. regression: 예측 결과의 범위가 넓을 때(연속적일 때), 사용할 수 있는 방법
+2. binary classification
+3. multi-lable classification
